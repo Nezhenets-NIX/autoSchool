@@ -1,0 +1,31 @@
+ Нахождение кнопки Filter
+//button [@type ='submit' and @class='button']
+button[type='submit'].button
+
+Нахождение линки Test Cases
+//a [@href = 'https://practice.automationtesting.in/test-cases/']
+a[href='https://practice.automationtesting.in/test-cases/']
+
+Нахождение кнопки для раскрывающегося списка (красная со стрелочками)
+//a[contains(@href,'#') and @class ='pull-down']
+a[href^='#'].pull-down
+
+Нахождение линки Джава скрипт в группе Категории продуктов
+// a [@href ='https://practice.automationtesting.in/product-category/javascript/']
+a[href='https://practice.automationtesting.in/product-category/javascript/']
+
+Нахождение "Android Quick Start Guide"
+//h3 [contains (text(), 'Android Quick Start Guide')]
+
+
+Нахождение цены в продукте "HTML5 Forms"
+//a [@href ='https://practice.automationtesting.in/product/html5-forms/']/descendant::span [@class='woocommerce-Price-currencySymbol']
+a[href='https://practice.automationtesting.in/product/html5-forms/'] span.woocommerce-Price-currencySymbol
+
+Нахождение поля ввода для мыла
+// input [@type ='email' and @name='EMAIL']
+input[type='email'][name='EMAIL']
+
+Нахождение года в футере
+//div[@class='one']/a[contains(text(),'2023')]
+div.one a
