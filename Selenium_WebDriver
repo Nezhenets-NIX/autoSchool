@@ -1,0 +1,144 @@
+using NUnit.Framework;
+using System;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System.Collections.Generic;
+using System.Text.Encodings.Web;
+
+namespace ToolsQA
+{
+    public class Task9
+    {
+        private IWebDriver driver = new ChromeDriver(@"C:\Users\karry\OneDrive\Desktop\MyPJ\video\video\Драйвер Хром\chromedriver.exe");
+        protected string text = "html";
+        IWebElement _txtSearch;
+        IWebElement _resultTitle;
+        IReadOnlyCollection<IWebElement> list;
+        IWebElement _link_ThinkinginHTML;
+        IWebElement _imgSale;
+        IWebElement _txtPriceWithoutSale;
+        IWebElement _txtPriceWithSale;
+        IWebElement _btnLink_HTML5;
+
+       [SetUp]
+        public void Setup()
+        {
+            driver.Navigate().GoToUrl("https://practice.automationtesting.in/shop/");
+            driver.Manage().Window.Maximize();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+        }
+
+        [Test]
+        public void Search()
+        {
+           // driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            _txtSearch = driver.FindElement(By.XPath("//input [@type='text' and @name='s' and @id='s']"));
+            _txtSearch.Click();
+            _txtSearch.SendKeys(text);
+            _txtSearch.Submit();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            
+        }
+
+        [Test]
+        public void Title()
+        {
+            _txtSearch = driver.FindElement(By.XPath("//i [@class='icon-search']"));
+            _txtSearch.Click();
+            _txtSearch.SendKeys(text);
+            _txtSearch.Submit();
+
+
+            _resultTitle = driver.FindElement(By.XPath("//h1 [@class='page-title']/em"));
+            string actualtitle = _resultTitle.Text;
+            string expectedtitle = "HTML";
+            Assert.AreEqual(expectedtitle, actualtitle);
+        }
+
+        [Test]
+        public void ResultOfSearch()
+        {
+            _txtSearch = driver.FindElement(By.XPath("//i [@class='icon-search']"));
+            _txtSearch.Click();
+            _txtSearch.SendKeys(text);
+            _txtSearch.Submit();
+
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            //Должны находиться
+            //< a href = "https://practice.automationtesting.in/product/html5-webapp-develpment/" title = "HTML5 WebApp Develpment" > HTML5 WebApp Develpment</ a >
+            //< a href = "https://practice.automationtesting.in/product/html5-forms/" title = "HTML5 Forms" > HTML5 Forms </ a >
+            //< a href = "https://practice.automationtesting.in/product/thinking-in-html/" title = "Thinking in HTML" > Thinking in HTML </ a >
+
+             list= driver.FindElements(By.XPath("//div [@id='loops-wrapper']// a [contains (@href, 'https://practice.automationtesting.in/product/')]"));
+             foreach (IWebElement x in list) 
+                { 
+                 string linka1 = x.GetAttribute("href");
+                 string title1 = x.GetAttribute("title");
+                
+                 Assert.IsTrue(linka1.Contains("html") && title1.Contains("html"), "Error, epte");
+                }
+            
+        }
+        [Test]
+        public void CheckImg()
+        {
+            _txtSearch = driver.FindElement(By.XPath("//i [@class='icon-search']"));
+            _txtSearch.Click();
+            _txtSearch.SendKeys(text);
+            _txtSearch.Submit();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            _link_ThinkinginHTML = driver.FindElement(By.XPath("// a [contains (@href, 'https://practice.automationtesting.in/product/thinking-in-html/') and @title='Thinking in HTML']"));
+            _link_ThinkinginHTML.Click();
+
+            _imgSale = driver.FindElement(By.XPath("// span [@class='onsale'][contains (text(),'Sale!')]"));
+            bool img = _imgSale.Displayed;
+            Assert.IsTrue(img, "Error, the img is absent");
+        }
+
+        [Test]
+        public void CheckPrice()
+        {
+            _txtSearch = driver.FindElement(By.XPath("//i [@class='icon-search']"));
+            _txtSearch.Click();
+            _txtSearch.SendKeys(text);
+            _txtSearch.Submit();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            _link_ThinkinginHTML = driver.FindElement(By.XPath("// a [contains (@href, 'https://practice.automationtesting.in/product/thinking-in-html/') and @title='Thinking in HTML']"));
+            _link_ThinkinginHTML.Click();
+
+            _txtPriceWithoutSale = driver.FindElement(By.XPath("// span [@class='woocommerce-Price-amount amount'][contains (text(), '450.00')]"));
+            _txtPriceWithSale = driver.FindElement(By.XPath("// span [@class='woocommerce-Price-amount amount'][contains (text(), '400.00')]"));
+
+            bool prices = _txtPriceWithoutSale.Displayed && _txtPriceWithSale.Displayed;
+            Assert.IsTrue(prices);
+        }
+        [Test]
+        public void NavigateTo_HTML5_WebApp_Develpment()
+        {
+            _txtSearch = driver.FindElement(By.XPath("//i [@class='icon-search']"));
+            _txtSearch.Click();
+            _txtSearch.SendKeys(text);
+            _txtSearch.Submit();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            _link_ThinkinginHTML = driver.FindElement(By.XPath("// a [contains (@href, 'https://practice.automationtesting.in/product/thinking-in-html/') and @title='Thinking in HTML']"));
+            _link_ThinkinginHTML.Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            _btnLink_HTML5 = driver.FindElement(By.XPath("// div [@class='related products']//a [@rel='nofollow' and @data-product_id='182']"));
+            _btnLink_HTML5.Click();
+            string actUrla = driver.Url;
+            string expUrla = "https://practice.automationtesting.in/product/html5-webapp-develpment/";
+
+            Assert.AreEqual(expUrla, actUrla);
+
+        }
+
+    }
+}
+
+
+
+
